@@ -34,6 +34,35 @@
 
 ---
 
+## 테스트 실행 방법
+
+전체 테스트 실행:
+
+```bash
+./gradlew test
+```
+
+Windows 환경:
+
+```bash
+gradlew.bat test
+```
+
+동시성 테스트는 초기 재고 100개를 생성한 뒤,
+100개의 차감 요청을 동시에 실행합니다.
+
+검증 기준:
+
+* 락 없는 단순 차감: Lost Update 재현
+* synchronized: 최종 재고 0
+* Pessimistic Lock: 최종 재고 0
+* Optimistic Lock: 재시도 후 최종 재고 0
+
+테스트 내부에서는 `ExecutorService`와
+`CountDownLatch`를 사용해 요청 시작 시점을 맞춥니다.
+
+---
+
 ## 해결 방식 비교
 
 ### 1. 락 없는 단순 차감
